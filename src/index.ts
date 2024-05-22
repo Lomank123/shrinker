@@ -1,17 +1,25 @@
-import express from 'express';
+import { configDotenv } from 'dotenv';
+configDotenv();
 
-const app = express();
-const port = 3000;
+import mongoose from 'mongoose';
+import { APP_PORT, MONGO_DB_URL } from './settings';
+import { app } from './express';
 
-app.use((req, res, next) => {
-  console.log(req.url, req.hostname, req.method);
-  next();
+async function main() {
+  try {
+    await mongoose.connect(MONGO_DB_URL);
+
+    app.listen(APP_PORT, () => {
+      console.log(`Listening on port ${APP_PORT}...`);
+    });
+  } catch (err) {
+    return console.error(err);
+  }
+}
+
+process.on('SIGINT', async () => {
+  await mongoose.disconnect();
+  process.exit();
 });
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
+main();

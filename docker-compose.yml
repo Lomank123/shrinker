@@ -1,0 +1,16 @@
+services:
+  mongodb:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    container_name: shrinker-db
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '${DB_PORT}:27017'
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
