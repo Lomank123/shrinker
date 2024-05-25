@@ -14,3 +14,6 @@ app.use(cors(CORS_OPTIONS));
 
 // Routers
 app.use('/', urlRouter);
+
+// Error handling middleware must be the last
+app.use(errorHandlerMiddleware);

@@ -4,7 +4,6 @@ import { generateShortUrlController } from '../controllers/generate-short-url.co
 import { testController } from '../controllers/test.controller';
 import { requestValidatorMiddleware } from '../middlewares/request-validator.middleware';
 import { body } from 'express-validator';
-import { errorHandlerMiddleware } from '../middlewares/error-handler.middleware';
 
 export const urlRouter = Router();
 
@@ -12,7 +11,6 @@ urlRouter.post(
   '/',
   body('url').isString().isURL(),
   requestValidatorMiddleware,
-  errorHandlerMiddleware,
   generateShortUrlController,
 );
 urlRouter.get('/:urlHash', redirectFromShortUrlController);

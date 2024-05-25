@@ -7,14 +7,15 @@ export function errorHandlerMiddleware(
   res: Response,
   next: NextFunction,
 ) {
+  console.error(err);
+
   if (err instanceof RequestError) {
-    res.status(err.statusCode).json({
+    return res.status(err.statusCode).json({
       errors: err.serialize(),
     });
   }
 
   // Unhandled error
-  console.error(err);
   res.status(500).json({
     errors: [{ message: 'Server Error' }],
   });
