@@ -10,6 +10,14 @@ export const SHORT_URL_MAX_LENGTH = parseInt(
   process.env.SHORT_URL_MAX_LENGTH || '7',
 );
 
+// CORS
+
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:3000';
+export const CORS_OPTIONS = {
+  origin: CORS_ORIGIN,
+  optionsSuccessStatus: 200,
+};
+
 // Database
 
 const DB_USER = process.env.DB_USER || 'user';

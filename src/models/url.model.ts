@@ -3,8 +3,8 @@ import { IUrl } from '../interfaces/url.interface';
 
 const UrlSchema = new Schema<IUrl>(
   {
-    shortUrl: { type: String, required: true },
-    longUrl: { type: String, required: true },
+    shortUrl: { type: String, required: true, unique: true },
+    longUrl: { type: String, required: true, unique: true },
   },
   { timestamps: true },
 );

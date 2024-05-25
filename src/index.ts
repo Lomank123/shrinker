@@ -1,7 +1,7 @@
+import mongoose from 'mongoose';
 import { configDotenv } from 'dotenv';
 configDotenv();
 
-import mongoose from 'mongoose';
 import { APP_PORT, MONGO_DB_URL } from './settings';
 import { app } from './express';
 
