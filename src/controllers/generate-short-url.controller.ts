@@ -1,18 +1,16 @@
 import { Request, Response } from 'express';
 import { UrlService } from '../services/url.service';
+import { ServerError } from '../errors/server.error';
 
 export function generateShortUrlController(req: Request, res: Response) {
-  // TODO: Add body validator
-  console.log(req.body);
   const service = new UrlService();
+  const url = req.body.url;
 
   try {
-    const shortUrl = service.generateShortUrl(req.body);
-    // TODO: Change output to JSON
-    res.status(201).send(shortUrl);
+    const shortUrl = service.generateShortUrl(url);
+    res.status(201).send({ shortUrl: shortUrl });
   } catch (error) {
     console.error(error);
-    // TODO: Add error message
-    res.status(500).send();
+    throw new ServerError('Error occurred during url conversion');
   }
 }

@@ -8,14 +8,14 @@ export function errorHandlerMiddleware(
   next: NextFunction,
 ) {
   if (err instanceof RequestError) {
-    res.status(err.statusCode).send({
+    res.status(err.statusCode).json({
       errors: err.serialize(),
     });
   }
 
   // Unhandled error
   console.error(err);
-  res.status(500).send({
+  res.status(500).json({
     errors: [{ message: 'Server Error' }],
   });
 

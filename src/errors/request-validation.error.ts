@@ -13,8 +13,8 @@ export class RequestValidationError extends RequestError {
 
   serialize() {
     return this.errors.map((error) => {
-      if ('param' in error) {
-        return { message: error.msg, field: error.param as string };
+      if ('path' in error) {
+        return { message: error.msg, field: error.path as string };
       }
 
       return { message: error.msg };
