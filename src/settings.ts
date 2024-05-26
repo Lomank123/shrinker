@@ -5,6 +5,10 @@ import * as process from 'node:process';
 export const ENV = process.env.ENV || 'dev';
 export const APP_PORT = parseInt(process.env.APP_PORT || '3033');
 
+const APP_SCHEMA = process.env.APP_SCHEMA || 'http';
+const APP_HOST = process.env.APP_HOST || `localhost:3033`;
+export const APP_URL = `${APP_SCHEMA}://${APP_HOST}`;
+
 export const HASH_ALGORITHM = process.env.HASH_ALGORITHM || 'sha256';
 export const SHORT_URL_MAX_LENGTH = parseInt(
   process.env.SHORT_URL_MAX_LENGTH || '7',
