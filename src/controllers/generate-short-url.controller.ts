@@ -3,8 +3,9 @@ import { UrlService } from '../services/url.service';
 
 export async function generateShortUrlController(req: Request, res: Response) {
   const service = new UrlService();
-  const url = req.body.url;
+  const originalUrl = req.body.url;
 
-  const shortUrl = await service.convertToShortUrl(url);
+  const url = await service.convertFromOriginalUrl(originalUrl);
+  const shortUrl = service.buildShortUrl(url.shortUrl);
   res.status(201).json({ shortUrl });
 }

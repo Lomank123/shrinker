@@ -8,6 +8,6 @@ export async function redirectFromShortUrlController(
   const urlHash = req.params.urlHash;
   const service = new UrlService();
 
-  const originalUrl = service.findOriginalUrl(urlHash);
-  res.redirect(301, originalUrl);
+  const redirectUrl = await service.getOriginalRedirectUrl(urlHash);
+  res.redirect(301, redirectUrl.longUrl);
 }

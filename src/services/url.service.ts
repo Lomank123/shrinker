@@ -1,60 +1,67 @@
 import { createHash, randomBytes } from 'crypto';
 import { APP_URL, HASH_ALGORITHM, SHORT_URL_MAX_LENGTH } from '../settings';
 import { UrlModel } from '../models/url.model';
-import { FilterQuery } from 'mongoose';
 import { IUrl } from '../interfaces/url.interface';
+import { NotFoundError } from '../errors/not-found.error';
 
+// TODO: Change shortUrl to shortHash
+// TODO: Change longUrl to originalUrl
 export class UrlService {
-  async convertToShortUrl(longUrl: string): Promise<string> {
-    let url = await this.findExistingUrl(longUrl);
+  /**
+   * Search for existing url. If not then generate a new one.
+   */
+  async convertFromOriginalUrl(longUrl: string): Promise<IUrl> {
+    let url: IUrl | null = await UrlModel.findOne({ longUrl });
 
     if (!url) {
-      url = await this.generateUrl(longUrl);
+      const shortHash = await this.generateShortHash(longUrl);
+      url = await UrlModel.create({ shortUrl: shortHash, longUrl });
     }
 
-    return this.buildFullUrl(url.shortUrl);
-  }
-
-  async findExistingUrl(
-    longUrl: string,
-    { ...filters }: FilterQuery<IUrl> = {},
-  ): Promise<IUrl | null> {
-    return UrlModel.findOne({ longUrl, ...filters });
+    return url;
   }
 
   /**
-   * Generate and return short URL based on provided long URL.
+   * Search for original url from given short hash.
    */
-  async generateUrl(longUrl: string): Promise<IUrl> {
+  async getOriginalRedirectUrl(shortHash: string): Promise<IUrl> {
+    const url = await UrlModel.findOne({ shortUrl: shortHash });
+
+    if (!url) {
+      throw new NotFoundError('Original URL not found');
+    }
+
+    return url;
+  }
+
+  /**
+   * Generate and return short hash based on provided url.
+   */
+  async generateShortHash(longUrl: string): Promise<string> {
     const prefix = randomBytes(4).toString('hex');
     let hash: string;
-    let shortUrl: string;
+    let shortHash: string;
     let longUrlCopy = `${longUrl}`;
     let hasCollision = false;
 
     do {
       const hashFunction = createHash(HASH_ALGORITHM);
       hash = hashFunction.update(longUrlCopy).digest('hex');
-      shortUrl = hash.slice(0, SHORT_URL_MAX_LENGTH);
-      hasCollision = !!(await UrlModel.exists({ shortUrl }));
+      shortHash = hash.slice(0, SHORT_URL_MAX_LENGTH);
+      hasCollision = !!(await UrlModel.exists({ shortUrl: shortHash }));
 
       if (hasCollision) {
         longUrlCopy += prefix;
       }
     } while (hasCollision);
 
-    return UrlModel.create({ shortUrl, longUrl });
+    return shortHash;
   }
 
   /**
-   * Search for original long URL from given short URL.
+   * Build user-friendly url ready to be used.
    */
-  findOriginalUrl(urlHash: string): string {
-    console.log(urlHash);
-    return 'http://127.0.0.1:8079/new-location';
-  }
-
-  buildFullUrl(shortUrl: string): string {
-    return `${APP_URL}/${shortUrl}`;
+  buildShortUrl(shortHash: string): string {
+    return `${APP_URL}/${shortHash}`;
   }
 }
