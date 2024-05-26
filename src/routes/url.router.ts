@@ -4,6 +4,7 @@ import { generateShortUrlController } from '../controllers/generate-short-url.co
 import { testController } from '../controllers/test.controller';
 import { requestValidatorMiddleware } from '../middlewares/request-validator.middleware';
 import { body } from 'express-validator';
+import { asyncErrorHandler } from '../utils/async-error-handler';
 
 export const urlRouter = Router();
 
@@ -11,9 +12,9 @@ urlRouter.post(
   '/',
   body('url').isString().isURL(),
   requestValidatorMiddleware,
-  generateShortUrlController,
+  asyncErrorHandler(generateShortUrlController),
 );
-urlRouter.get('/:urlHash', redirectFromShortUrlController);
+urlRouter.get('/:urlHash', asyncErrorHandler(redirectFromShortUrlController));
 
 // TODO: Remove after tests
 urlRouter.get('/', testController);

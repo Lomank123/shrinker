@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import { UrlService } from '../services/url.service';
 
-// TODO: Add async support (don't forget to change error handling)
-export function redirectFromShortUrlController(req: Request, res: Response) {
+export async function redirectFromShortUrlController(
+  req: Request,
+  res: Response,
+): Promise<void> {
   const urlHash = req.params.urlHash;
   const service = new UrlService();
 
