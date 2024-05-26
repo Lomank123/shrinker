@@ -6,6 +6,6 @@ export async function generateShortUrlController(req: Request, res: Response) {
   const originalUrl = req.body.url;
 
   const url = await service.convertFromOriginalUrl(originalUrl);
-  const shortUrl = service.buildShortUrl(url.shortUrl);
+  const shortUrl = service.buildShortUrl(url.shortHash);
   res.status(201).json({ shortUrl });
 }

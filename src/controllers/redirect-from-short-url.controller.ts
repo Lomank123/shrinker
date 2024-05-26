@@ -5,9 +5,9 @@ export async function redirectFromShortUrlController(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const urlHash = req.params.urlHash;
+  const shortHash = req.params.shortHash;
   const service = new UrlService();
 
-  const redirectUrl = await service.getOriginalRedirectUrl(urlHash);
-  res.redirect(301, redirectUrl.longUrl);
+  const redirectUrl = await service.getOriginalRedirectUrl(shortHash);
+  res.redirect(301, redirectUrl.originalUrl);
 }
