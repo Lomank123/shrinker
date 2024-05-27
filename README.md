@@ -57,7 +57,6 @@ The app provides 2 API endpoints:
 Remained tasks:
 
 - Dockerize main app
-- Add caching
 - Add Bloom Filters (if possible)
 - Add tests
 - Add frontend
