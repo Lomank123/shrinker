@@ -51,3 +51,13 @@ The app provides 2 API endpoints:
 
 - `POST /` - Generate new short url from given `url`
 - `GET /:shortHash` - Redirect from short url to the original one
+
+## Extra
+
+Remained tasks:
+
+- Dockerize main app
+- Add caching
+- Add Bloom Filters (if possible)
+- Add tests
+- Add frontend
