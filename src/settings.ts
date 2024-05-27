@@ -30,3 +30,9 @@ const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_NAME = process.env.DB_NAME || 'shrinker-db';
 const DB_PORT = process.env.DB_PORT || '27022';
 export const MONGO_DB_URL = `mongodb://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}`;
+
+// Redis
+
+const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
+const REDIS_PORT = process.env.REDIS_PORT || '6378';
+export const REDIS_URL = `redis://${REDIS_HOST}:${REDIS_PORT}`;
