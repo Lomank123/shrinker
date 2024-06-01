@@ -16,7 +16,7 @@ services:
     restart: always
     env_file:
       - .env
-    image: redis
+    image: redis/redis-stack-server
     ports:
       - '${REDIS_PORT}:6379'
 

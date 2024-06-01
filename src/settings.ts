@@ -36,3 +36,13 @@ export const MONGO_DB_URL = `mongodb://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_POR
 const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
 const REDIS_PORT = process.env.REDIS_PORT || '6378';
 export const REDIS_URL = `redis://${REDIS_HOST}:${REDIS_PORT}`;
+
+// Redis Bloom Filter
+export const REDIS_BLOOM_NAME =
+  process.env.REDIS_BLOOM_NAME || 'url-lookup-bloom';
+export const REDIS_BLOOM_EXPECTED_CAPACITY = parseInt(
+  process.env.REDIS_BLOOM_EXPECTED_CAPACITY || '1000',
+);
+export const REDIS_BLOOM_ERROR_RATE = parseFloat(
+  process.env.REDIS_BLOOM_ERROR_RATE || '0.001',
+);
