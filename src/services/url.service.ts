@@ -1,5 +1,10 @@
 import { createHash, randomBytes } from 'crypto';
-import { APP_URL, HASH_ALGORITHM, SHORT_URL_MAX_LENGTH } from '../settings';
+import {
+  APP_URL,
+  HASH_ALGORITHM,
+  REDIS_BLOOM_NAME,
+  SHORT_URL_MAX_LENGTH,
+} from '../settings';
 import { UrlModel } from '../models/url.model';
 import { IUrl } from '../interfaces/url.interface';
 import { NotFoundError } from '../errors/not-found.error';
@@ -51,6 +56,10 @@ export class UrlService {
 
   /**
    * Generate and return short hash based on provided url.
+   * To reduce the amount of DB hits a Bloom Filter is used.
+   *
+   * Bloom Filter reduces DB hit amount
+   * in case there is at least 1 collision occurred.
    */
   async generateShortHash(originalUrl: string): Promise<string> {
     const prefix = randomBytes(4).toString('hex');
@@ -63,10 +72,14 @@ export class UrlService {
       const hashFunction = createHash(HASH_ALGORITHM);
       hash = hashFunction.update(originalUrlCopy).digest('hex');
       shortHash = hash.slice(0, SHORT_URL_MAX_LENGTH);
-      hasCollision = !!(await UrlModel.exists({ shortHash }));
+      hasCollision = await redisClient.bf.exists(REDIS_BLOOM_NAME, shortHash);
 
       if (hasCollision) {
         originalUrlCopy += prefix;
+      } else {
+        await redisClient.bf.add(REDIS_BLOOM_NAME, shortHash);
+        // Double check in case bloom filter had no such value before
+        hasCollision = !!(await UrlModel.exists({ shortHash }));
       }
     } while (hasCollision);
 
